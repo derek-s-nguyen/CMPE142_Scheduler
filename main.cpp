@@ -5,7 +5,7 @@
 #include <string>
 #include <fstream>
 #include <ctime>
-#include "Jobs.h"
+#include "Jobs.hpp"
 using namespace std;
 int findNumJobs();
 int main() {
