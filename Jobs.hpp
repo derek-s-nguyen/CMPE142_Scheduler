@@ -18,7 +18,7 @@ public:
 	friend istream &operator >>(istream &in_stream, Jobs &job);
 	friend ostream &operator <<(ostream &out_stream, const Jobs &job);
 	void operator =(const Jobs &job);
-	void outputForJobs();
+	void outputForJobs(Jobs *jobsArry);
 	~Jobs();
 	//calculated values depending on scheduling algorithms:
 	int getStartTime();
