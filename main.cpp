@@ -54,29 +54,10 @@ void FIFO(Jobs *jobsArry, int numberOfJobs){//no preemption
         jobsArry[min] = jobsArry[i];
         jobsArry[i] = temp;
     }
-    /*
-    need to output:
-    start time, finish time, total time elapsed, response time
-    */
-    for(k = 0; k < numberOfJobs; k++){
-    	if(jobsArry[k].getArrival() > currentTimeStamp)//if there are no jobs to schedule
-    	{
-    		currentTimeStamp = jobsArry[k].getArrival();//adjust the current time stamp to skip to the next job's arrival time
-    	}
-    	jobsArry[k].setStartTime(currentTimeStamp);//start time is the current time stamp because FIFO (array is sorted)
-    	jobsArry[k].setFinishTime((jobsArry[k].getDuration() + currentTimeStamp));
-    	currentTimeStamp = jobsArry[k].getFinishTime();
-    }
-    //printing job results for FIFO
-    for(a = 0; a < numberOfJobs; a++){
-    	cout << "Job ID " << jobsArry[a].getID() << ":\n"
-    			<< "\tStart Time: " << jobsArry[a].getStartTime() << endl
-				<< "\tFinish Time: " << jobsArry[a].getFinishTime() << endl
-				<< "\tTotal Time Elapsed: " << (jobsArry[a].getFinishTime() - jobsArry[a].getArrival()) << endl
-				<< "\tResponse Time: " << (jobsArry[a].getStartTime() - jobsArry[a].getArrival()) << endl;
-    }
+
 }
-void SJF(Jobs *jobsArry, int numberOfJobs){//no preemption
+void SJF(Jobs *jobsArry, int numberOfJobs){
+	//no preemption
 
 }
 void BJF(Jobs *jobsArry, int numberOfJobs){//no preemption

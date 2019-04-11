@@ -33,3 +33,21 @@ void Jobs::setStartTime(int start){ startTime = start; }
 void Jobs::setFinishTime(int finish){ finishTime = finish; }
 void Jobs::setTotalTimeElapsed(int total){ totalTimeElapsed = total; }
 void Jobs::setResponseTime(int response){ responseTime = response; }
+void Jobs::outputForJobs(){
+	 for(k = 0; k < numberOfJobs; k++){
+    	if(jobsArry[k].getArrival() > currentTimeStamp)//if there are no jobs to schedule
+    	{
+    		currentTimeStamp = jobsArry[k].getArrival();//adjust the current time stamp to skip to the next job's arrival time
+    	}
+    	jobsArry[k].setStartTime(currentTimeStamp);//start time is the current time stamp because FIFO (array is sorted)
+    	jobsArry[k].setFinishTime((jobsArry[k].getDuration() + currentTimeStamp));
+    	currentTimeStamp = jobsArry[k].getFinishTime();
+    }
+	 for(a = 0; a < numberOfJobs; a++){
+    	cout << "Job ID " << jobsArry[a].getID() << ":\n"
+    			<< "\tStart Time: " << jobsArry[a].getStartTime() << endl
+				<< "\tFinish Time: " << jobsArry[a].getFinishTime() << endl
+				<< "\tTotal Time Elapsed: " << (jobsArry[a].getFinishTime() - jobsArry[a].getArrival()) << endl
+				<< "\tResponse Time: " << (jobsArry[a].getStartTime() - jobsArry[a].getArrival()) << endl;
+    }
+}
