@@ -73,9 +73,9 @@ void FIFO(Jobs *jobsArry, int numberOfJobs){//no preemption
 void SJF(Jobs *jobsArry, int numberOfJobs){//no preemption
 	/*
 	Need to account for arrival times--if a long job arrives earlier than a short job,
-	then the long job will run first. The SJF algorithm only kicks in when we have
-	2 jobs arriving at the same time with different durations (this is because we are
-	not required to have preemption in this implementation of SJF)
+	then the long job will run first (this is because we are not required to have preemption
+	in this implementation of SJF). Thus, the jobs whose arrival times are within the current
+	time stamp should be sorted by increasing order of duration times.
 	*/
 }
 void BJF(Jobs *jobsArry, int numberOfJobs){//no preemption
