@@ -1,23 +1,36 @@
-#ifndef JOBS_H_
-#define JOBS_H_
+#ifndef JOBS_HPP_
+#define JOBS_HPP_
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
 using namespace std;
+/*
+need to output:
+start time, finish time, total time elapsed, response time
+*/
 class Jobs
 {
 public:
 	Jobs();
 	int getArrival();
-	int getCompletion();
 	int getID();
 	int getDuration();
 	friend istream &operator >>(istream &in_stream, Jobs &job);
 	friend ostream &operator <<(ostream &out_stream, const Jobs &job);
+	void operator =(const Jobs &job);
 	~Jobs();
+	//calculated values depending on scheduling algorithms:
+	int getStartTime();
+	int getFinishTime();
+	int getTotalTimeElapsed();
+	int getResponseTime();
+	void setStartTime(int start);
+	void setFinishTime(int finish);
+	void setTotalTimeElapsed(int total);
+	void setResponseTime(int response);
 private:
 	int arrival, completion, ID, duration;
+	int startTime, finishTime, totalTimeElapsed, responseTime;
 };
-//start time, finish time, total time elapsed, response time
 
-#endif /* JOBS_H_ */
+#endif /* JOBS_HPP_ */
