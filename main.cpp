@@ -36,11 +36,10 @@ int main() {
 	return 0;
 }
 //*NOTE: this FIFO function also sorts the array of jobs in increasing order of arrival times
-void FIFO(Jobs *jobsArry, int numberOfJobs){//no preemption
-	int i, j, k, a, min;
+void FIFO(Jobs *jobsArry, int numberOfJobs){
+	//no preemption
+	int i, j, min;
 	Jobs temp;
-	int currentTimeStamp = 0;//time stamp starts at zero
-
 	//sorting the jobs array by increasing order of arrival times using selection sort (for simplicity)
     for (i = 0; i < (numberOfJobs - 1); i++)
     {
@@ -55,9 +54,50 @@ void FIFO(Jobs *jobsArry, int numberOfJobs){//no preemption
         jobsArry[i] = temp;
     }
 
+	int currentTimeStamp = 0;//time stamp starts at zero
+	 for(k = 0; k < numberOfJobs; k++){
+    	if(jobsArry[k].getArrival() > currentTimeStamp)//if there are no jobs to schedule
+    	{
+    		currentTimeStamp = jobsArry[k].getArrival();//adjust the current time stamp to skip to the next job's arrival time
+    	}
+    	jobsArry[k].setStartTime(currentTimeStamp);//start time is the current time stamp because FIFO (array is sorted)
+    	jobsArry[k].setFinishTime((jobsArry[k].getDuration() + currentTimeStamp));
+    	currentTimeStamp = jobsArry[k].getFinishTime();
+    }
+
+	output(*jobsArry);
+
 }
 void SJF(Jobs *jobsArry, int numberOfJobs){
 	//no preemption
+	int i, j, min;
+	Jobs temp;
+	int currentTimeStamp = 0;
+	//sorting jobs based on duration of the job, min will be the job that takes up the shortest time
+	for(i =0; i < (numberofJobs-1); i++){
+		min = i;
+		for(j=i+1; j<numberofJobs; j++){
+			if(jobsArry[j].getDuration() < jobsArry[min].getDuration()){
+				min = j;
+			}
+		}
+		temp = jobsArry[min];
+        jobsArry[min] = jobsArry[i];
+        jobsArry[i] = temp;
+	}
+
+	int currentTimeStamp = 0;//time stamp starts at zero
+	 for(k = 0; k < numberOfJobs; k++){
+    	if(jobsArry[k].getArrival() > currentTimeStamp)//if there are no jobs to schedule
+    	{
+    		currentTimeStamp = jobsArry[k].getArrival();//adjust the current time stamp to skip to the next job's arrival time
+    	}
+    	jobsArry[k].setStartTime(currentTimeStamp);//start time is the current time stamp because FIFO (array is sorted)
+    	jobsArry[k].setFinishTime((jobsArry[k].getDuration() + currentTimeStamp));
+    	currentTimeStamp = jobsArry[k].getFinishTime();
+    }
+
+	output(*jobsArry);
 
 }
 void BJF(Jobs *jobsArry, int numberOfJobs){//no preemption
