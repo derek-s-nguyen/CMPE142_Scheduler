@@ -17,6 +17,7 @@ void BJF(Jobs *jobsArry, int numberOfJobs);
 void STCF(Jobs *jobsArry, int numberOfJobs);
 void RR(Jobs *jobsArry, int numberOfJobs);
 int findNumJobs();
+void outputJobs(Jobs *jobsArry, int numberOfJobs);
 int main() {
 	int numberOfJobsFound = 0;
 	ifstream in_stream;
@@ -36,10 +37,11 @@ int main() {
 	return 0;
 }
 //*NOTE: this FIFO function also sorts the array of jobs in increasing order of arrival times
-void FIFO(Jobs *jobsArry, int numberOfJobs){
-	//no preemption
-	int i, j, min;
+void FIFO(Jobs *jobsArry, int numberOfJobs){//no preemption
+	int i, j, k, min;
 	Jobs temp;
+	int currentTimeStamp = 0;//time stamp starts at zero
+
 	//sorting the jobs array by increasing order of arrival times using selection sort (for simplicity)
     for (i = 0; i < (numberOfJobs - 1); i++)
     {
@@ -53,9 +55,11 @@ void FIFO(Jobs *jobsArry, int numberOfJobs){
         jobsArry[min] = jobsArry[i];
         jobsArry[i] = temp;
     }
-
-	int currentTimeStamp = 0;//time stamp starts at zero
-	 for(k = 0; k < numberOfJobs; k++){
+    /*
+    need to output:
+    start time, finish time, total time elapsed, response time
+    */
+    for(k = 0; k < numberOfJobs; k++){
     	if(jobsArry[k].getArrival() > currentTimeStamp)//if there are no jobs to schedule
     	{
     		currentTimeStamp = jobsArry[k].getArrival();//adjust the current time stamp to skip to the next job's arrival time
@@ -64,47 +68,32 @@ void FIFO(Jobs *jobsArry, int numberOfJobs){
     	jobsArry[k].setFinishTime((jobsArry[k].getDuration() + currentTimeStamp));
     	currentTimeStamp = jobsArry[k].getFinishTime();
     }
-
-	output(*jobsArry);
-
+    outputJobs(jobsArry, numberOfJobs);
 }
-void SJF(Jobs *jobsArry, int numberOfJobs){
-	//no preemption
-	int i, j, min;
-	Jobs temp;
-	int currentTimeStamp = 0;
-	//sorting jobs based on duration of the job, min will be the job that takes up the shortest time
-	for(i =0; i < (numberofJobs-1); i++){
-		min = i;
-		for(j=i+1; j<numberofJobs; j++){
-			if(jobsArry[j].getDuration() < jobsArry[min].getDuration()){
-				min = j;
-			}
-		}
-		temp = jobsArry[min];
-        jobsArry[min] = jobsArry[i];
-        jobsArry[i] = temp;
-	}
-
-	int currentTimeStamp = 0;//time stamp starts at zero
-	 for(k = 0; k < numberOfJobs; k++){
-    	if(jobsArry[k].getArrival() > currentTimeStamp)//if there are no jobs to schedule
-    	{
-    		currentTimeStamp = jobsArry[k].getArrival();//adjust the current time stamp to skip to the next job's arrival time
-    	}
-    	jobsArry[k].setStartTime(currentTimeStamp);//start time is the current time stamp because FIFO (array is sorted)
-    	jobsArry[k].setFinishTime((jobsArry[k].getDuration() + currentTimeStamp));
-    	currentTimeStamp = jobsArry[k].getFinishTime();
-    }
-
-	output(*jobsArry);
-
+void SJF(Jobs *jobsArry, int numberOfJobs){//no preemption
+	/*
+	Need to account for arrival times--if a long job arrives earlier than a short job,
+	then the long job will run first. The SJF algorithm only kicks in when we have
+	2 jobs arriving at the same time with different durations (this is because we are
+	not required to have preemption in this implementation of SJF)
+	*/
 }
 void BJF(Jobs *jobsArry, int numberOfJobs){//no preemption
 
 }
 void STCF(Jobs *jobsArry, int numberOfJobs){}
 void RR(Jobs *jobsArry, int numberOfJobs){}
+void outputJobs(Jobs *jobsArry, int numberOfJobs){//print jobs results
+	cout << "\n\t\tStart Time" << "\tFinish Time" << "\tTotal Time Elapsed" << "\tResponse Time\n";
+	cout << "_____________________________________________________________________________________\n";
+    for(int a = 0; a < numberOfJobs; a++){
+    	cout << "Job ID " << jobsArry[a].getID() << ": "
+    			<< "\t" << jobsArry[a].getStartTime() << "\t"
+				<< "\t" << jobsArry[a].getFinishTime() << "\t"
+				<< "\t" << (jobsArry[a].getFinishTime() - jobsArry[a].getArrival()) << "\t"
+				<< "\t\t" << (jobsArry[a].getStartTime() - jobsArry[a].getArrival()) << endl;
+    }
+}
 int findNumJobs()
 {
 	int numberOfJobsFound = 0, counter = 0;
