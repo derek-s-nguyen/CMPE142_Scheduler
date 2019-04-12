@@ -7,10 +7,7 @@
 #include <ctime>
 #include "Jobs.hpp"
 using namespace std;
-/*
-need to output:
-start time, finish time, total time elapsed, response time
-*/
+
 void FIFO(Jobs *jobsArry, int numberOfJobs);
 void SJF(Jobs *jobsArry, int numberOfJobs);
 void BJF(Jobs *jobsArry, int numberOfJobs);
@@ -55,10 +52,6 @@ void FIFO(Jobs *jobsArry, int numberOfJobs){//no preemption
         jobsArry[min] = jobsArry[i];
         jobsArry[i] = temp;
     }
-    /*
-    need to output:
-    start time, finish time, total time elapsed, response time
-    */
     for(k = 0; k < numberOfJobs; k++){
     	if(jobsArry[k].getArrival() > currentTimeStamp)//if there are no jobs to schedule
     	{
@@ -70,13 +63,55 @@ void FIFO(Jobs *jobsArry, int numberOfJobs){//no preemption
     }
     outputJobs(jobsArry, numberOfJobs);
 }
-void SJF(Jobs *jobsArry, int numberOfJobs){//no preemption
+void SJF(Jobs *jobsArry, int numberOfJobs){
 	/*
 	Need to account for arrival times--if a long job arrives earlier than a short job,
 	then the long job will run first (this is because we are not required to have preemption
 	in this implementation of SJF). Thus, the jobs whose arrival times are within the current
-	time stamp should be sorted by increasing order of duration times.
-	*/
+	time stamp should be sorted by increasing order of duration times.*/
+	
+	//Edit #1: sorted the array with increasing order of arrival times because there is no preemption 
+
+	Jobs temp;
+	int currentTimeStamp = 0;
+	int min = 0;
+	 for (int i = 0; i < (numberOfJobs - 1); i++)
+    {
+        min = i;
+        for (int j = i + 1; j < numberOfJobs; j++){
+        	if (jobsArry[j].getArrival() < jobsArry[min].getArrival()){
+        		min = j;
+        	}
+        }
+        temp = jobsArry[min];
+        jobsArry[min] = jobsArry[i];
+        jobsArry[i] = temp;
+    }
+
+	for(k = 0; k < numberOfJobs; k++){
+    	if(jobsArry[k].getArrival() > currentTimeStamp)//if there are no jobs to schedule
+    	{
+    		currentTimeStamp = jobsArry[k].getArrival();
+			//adjust the current time stamp to skip to the next job's arrival time
+    	}
+
+		//need to compare duration of the jobs
+		if(jobsArry[k].getDuration() < jobsArry[k+1].getDuration()){
+			jobsArry[k].setStartTime(currentTimeStamp); 
+	    	jobsArry[k].setFinishTime((jobsArry[k].getDuration() + currentTimeStamp));
+    		currentTimeStamp = jobsArry[k].getFinishTime();
+		}
+
+		//if everything ends up being okay
+		else{
+    	jobsArry[k].setStartTime(currentTimeStamp);
+    	jobsArry[k].setFinishTime((jobsArry[k].getDuration() + currentTimeStamp));
+    	currentTimeStamp = jobsArry[k].getFinishTime();
+    	}
+	}
+    outputJobs(jobsArry, numberOfJobs);
+	
+
 }
 void BJF(Jobs *jobsArry, int numberOfJobs){//no preemption
 
