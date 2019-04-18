@@ -42,6 +42,9 @@ int main() {
 	cout << "BJF: ";
 	BJF(jobsArry, numberOfJobsFound);
 	cout << endl;
+	cout << "RR: ";
+	RR(jobsArry, numberOfJobsFound);
+	cout << endl;
 
 	return 0;
 }
@@ -189,8 +192,85 @@ void BJF(Jobs *jobsArry, int numberOfJobs){//no preemption
 	}
 	outputJobs(jobsArry, numberOfJobs);
 }
-void STCF(Jobs *jobsArry, int numberOfJobs){}
-void RR(Jobs *jobsArry, int numberOfJobs){}
+void STCF(Jobs *jobsArry, int numberOfJobs){}//yet to be implemented
+void RR(Jobs *jobsArry, int numberOfJobs){
+    int a, min, b, numberOfJobsDone = 0;
+    Jobs temp;
+	int currentTimeStamp = 0;//time stamp starts at zero
+	bool jobAlreadyStarted[numberOfJobs], alreadyCheckedIfJobDone[numberOfJobs];
+
+	//running selection sort (for simplicity--should be improved) just to sort the jobs by increasing order of arrival times
+    for (a = 0; a < (numberOfJobs - 1); a++)
+    {
+    	jobAlreadyStarted[a] = false;//initializing all jobs to 'not yet started'
+    	alreadyCheckedIfJobDone[a] = false;
+        min = a;
+        for (b = a + 1; b < numberOfJobs; b++){
+        	if (jobsArry[b].getArrival() < jobsArry[min].getArrival()){
+        		min = b;
+        	}
+        }
+        temp = jobsArry[min];
+        jobsArry[min] = jobsArry[a];
+        jobsArry[a] = temp;
+    }
+
+    /*
+    jobs whose arrival time is within the current time stamp need to be time sliced into predetermined quanta of time
+    and swapped in a 'round robin' fashion
+     */
+
+    while(numberOfJobsDone != numberOfJobs){//while all jobs are not done
+    	/*
+    	run through all jobs currently available (all jobs whose arrival time is within (<=) the currentTimeStamp)
+    	 */
+	    for (int i = 0; i <= getMaxIndexOfCurrentAvailableJobs(jobsArry, currentTimeStamp, numberOfJobs); i++) {
+	    	if(jobsArry[i].getRemainingTime() <= 0){//the 'i' job is done (duration has expired)
+	    		if(alreadyCheckedIfJobDone[i] == true){//you already updated numberOfJobsDone and set finish time so do nothing
+	    		}
+	    		else{//you have not updated numberOfJobsDone so set finish time, increment numberOfJobsDone, and update alreadyCheckedIfJobsDone
+	    			alreadyCheckedIfJobDone[i] = true;
+		    		numberOfJobsDone = numberOfJobsDone + 1;
+		    		jobsArry[i].setFinishTime(currentTimeStamp);
+	    		}
+	    	}
+	    	else{//the 'i' job is not done (duration has not expired) so take a time slice from this job and update current time stamp
+	        	if(jobsArry[i].getArrival() > currentTimeStamp){//if there are no jobs to schedule
+	        		currentTimeStamp = jobsArry[i].getArrival();//adjust the current time stamp to skip to the next job's arrival time
+	        	}
+	    		if(jobAlreadyStarted[i] == true){//job already started so don't need to set the start time
+	    			if(jobsArry[i].getRemainingTime() >= 5){
+	    				jobsArry[i].takeTimeSliceAway(5);//we chose 5 as the quanta of time that a job is alloted in the RR scheduler
+		    			currentTimeStamp = currentTimeStamp + 5;//increase currentTimeStamp by one time interval
+	    			}
+	    			else{//time is less than 5 so just take it all away
+	    				currentTimeStamp = currentTimeStamp + jobsArry[i].getRemainingTime();//increase currentTimeStamp by remainingTime
+	    				jobsArry[i].takeTimeSliceAway(jobsArry[i].getRemainingTime());
+	    			}
+	    		}
+	    		else{//this is first time job starts, so set start time
+	    			jobAlreadyStarted[i] = true;
+	    			jobsArry[i].setStartTime(currentTimeStamp);
+	    			if(jobsArry[i].getRemainingTime() >= 5){
+	    				jobsArry[i].takeTimeSliceAway(5);//we chose 5 as the quanta of time that a job is alloted in the RR scheduler
+		    			currentTimeStamp = currentTimeStamp + 5;//increase currentTimeStamp by one time interval
+	    			}
+	    			else{//time is less than 5 so just take it all away
+	    				currentTimeStamp = currentTimeStamp + jobsArry[i].getRemainingTime();//increase currentTimeStamp by one time interval
+	    				jobsArry[i].takeTimeSliceAway(jobsArry[i].getRemainingTime());
+	    			}
+	    		}
+	    	}
+	    }
+
+	    //fixing the currentTimeStamp if all jobs within the currentTimeStamp are done
+    	if(numberOfJobsDone == (getMaxIndexOfCurrentAvailableJobs(jobsArry, currentTimeStamp, numberOfJobs) + 1))//if all the jobs within the currentTimeStamp are done
+    	{
+    		currentTimeStamp = jobsArry[numberOfJobsDone].getArrival();//adjust the current time stamp to skip to the next job's arrival time
+    	}
+    }
+	outputJobs(jobsArry, numberOfJobs);
+}
 void outputJobs(Jobs *jobsArry, int numberOfJobs){//print jobs results
 	cout << "\t\tStart Time" << "\tFinish Time" << "\tTotal Time Elapsed" << "\tResponse Time\n";
 	cout << "_____________________________________________________________________________________\n";
