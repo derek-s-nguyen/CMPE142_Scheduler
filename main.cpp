@@ -214,12 +214,14 @@ void RR(Jobs *jobsArry, int numberOfJobs){
         jobsArry[min] = jobsArry[a];
         jobsArry[a] = temp;
     }
+    //the selection sort before this does not initialize the last element of the bool arrays
+    jobAlreadyStarted[(numberOfJobs - 1)] = false;
+    alreadyCheckedIfJobDone[(numberOfJobs - 1)] = false;
 
     /*
     jobs whose arrival time is within the current time stamp need to be time sliced into predetermined quanta of time
     and swapped in a 'round robin' fashion
      */
-
     while(numberOfJobsDone != numberOfJobs){//while all jobs are not done
     	/*
     	run through all jobs currently available (all jobs whose arrival time is within (<=) the currentTimeStamp)
@@ -317,3 +319,4 @@ int getMaxIndexOfCurrentAvailableJobs(Jobs *jobsArry, int currentTimeStamp, int 
 	return index;
 
 }
+
