@@ -29,6 +29,7 @@ public:
 	void setStartTime(int start);
 	void setFinishTime(int finish);
 	void setTotalTimeElapsed(int total);
+	void setRemainingTime(int time);
 	void setResponseTime(int response);
 private:
 	int arrival, completion, ID, duration, remainingTime;
