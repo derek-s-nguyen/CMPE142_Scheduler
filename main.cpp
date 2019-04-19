@@ -228,7 +228,7 @@ void STCF(Jobs *jobsArry, int numberOfJobs){
 	//look for shortest to completion job
         while(numberOfCompletedJobs != numberOfJobs)
         {
-      		for(int j = 0; j < numberOfJobs; j++){
+      	      for(int j = 0; j < numberOfJobs; j++){
 		    //1.If job is less than or equivalent to the current time the timer has passed
 		    //2.The remaining time of the job is less than the current job's remaining job time
 		    //3.The remaing time of the job is less than 0
@@ -239,16 +239,16 @@ void STCF(Jobs *jobsArry, int numberOfJobs){
                 	}
             	}
 		//if job has not started before and all jobs were checked in the jobsArry
-		if(!jobsArry[shortestJob].getjobStarted()){
+	      if(!jobsArry[shortestJob].getjobStarted()){
 			     
                         jobsArry[shortestJob].setStartTime(timer);
                         jobsArry[shortestJob].setjobStarted(true);
 			
                 }
 			
-         shortestJobFound = true;//if shortest was not found keep timer going
+            shortestJobFound = true;
 		
-            if(shortestJobFound == false) {
+            if(shortestJobFound == false) {//if shortest was not found keep timer going
                 timer++;
                 continue;
             }
