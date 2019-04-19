@@ -27,11 +27,11 @@ int main() {
 	numberOfJobsFound = findNumJobs();
 
 	Jobs *jobsArry = new Jobs[numberOfJobsFound];
-
+	Jobs *jobsArrySTCF = new Jobs[numberOfJobsFound];
 	for(int i = 0; i < numberOfJobsFound; i++)
 	{
 		in_stream >> jobsArry[i];
-//		cout << jobsArry[i];
+		jobsArrySTCF = jobsArry[i];
 	}
 	cout << "FIFO: ";
 	FIFO(jobsArry, numberOfJobsFound);
@@ -43,7 +43,7 @@ int main() {
 	BJF(jobsArry, numberOfJobsFound);
 	cout << endl;
 	cout << "STCF: ";
-   	STCF(jobsArry, numberOfJobsFound);
+   	STCF(jobsArrySTCF, numberOfJobsFound);
     	cout << endl;
 	cout << "RR: ";
 	RR(jobsArry, numberOfJobsFound);
@@ -206,14 +206,13 @@ void STCF(Jobs *jobsArry, int numberOfJobs){
        {
            min = a;
            for (b = a + 1; b < numberOfJobs; b++){
+		if(jobsArry[b].getArrival() == jobsArry[min].getArrival()){
+			if(jobsArry[b].getDuration() < jobsArry[min].getDuration()) min = b;
+		}
                	if(jobsArry[b].getArrival() < jobsArry[min].getArrival()){
                    	min = b;
-               	}
-		if(jobsArry[b].getArrival() == jobsArry[min].getArrival()){
-                   	if(jobsArry[b].getDuration() < jobsArry[min].getDuration()){
-                       		min = b;
-                   	}
-               	}
+		}
+		
            }
            temp = jobsArry[min];
            jobsArry[min] = jobsArry[a];
@@ -235,22 +234,23 @@ void STCF(Jobs *jobsArry, int numberOfJobs){
                 	if((jobsArry[j].getArrival() <= timer) && (jobsArry[j].getRemainingTime() < shortestJobTimeRemaining) && (jobsArry[j].getRemainingTime() > 0)) {
                     		shortestJobTimeRemaining = jobsArry[j].getRemainingTime();
                     		shortestJob = j;
-			
+				shortestJobFound = true;
                 	}
             	}
 		//if job has not started before and all jobs were checked in the jobsArry
-	      if(!jobsArry[shortestJob].getjobStarted()){
-			     
-                        jobsArry[shortestJob].setStartTime(timer);
-                        jobsArry[shortestJob].setjobStarted(true);
+	      
 			
-                }
-			
-            shortestJobFound = true;
 		
             if(shortestJobFound == false) {//if shortest was not found keep timer going
                 timer++;
                 continue;
+            }
+		
+	    if(!jobsArry[shortestJob].getjobStarted()){
+			     
+                jobsArry[shortestJob].setStartTime(timer);
+                jobsArry[shortestJob].setjobStarted(true);
+			
             }
 
             // Reduce job's remaining time by one
@@ -258,11 +258,9 @@ void STCF(Jobs *jobsArry, int numberOfJobs){
 
             // Update shortestJobTimeRemaining
             shortestJobTimeRemaining = jobsArry[shortestJob].getRemainingTime();
-            if (shortestJobTimeRemaining == 0)
-                shortestJobTimeRemaining = INT_MAX;
-
+            
             // If a job is completed
-            if (jobsArry[shortestJob].getRemainingTime() == 0) {
+            if(jobsArry[shortestJob].getRemainingTime() == 0) {
 
                 // Increment numberOfCompletedJobs
                 numberOfCompletedJobs++;
@@ -271,6 +269,9 @@ void STCF(Jobs *jobsArry, int numberOfJobs){
                 // Set finish time of current job
                 jobsArry[shortestJob].setFinishTime(timer+1);
             }
+	    if(shortestJobTimeRemaining == 0) shortestJobTimeRemaining = INT_MAX;
+
+	
             // Increment timer
             timer++;
 	}
