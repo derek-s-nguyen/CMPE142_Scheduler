@@ -27,11 +27,11 @@ int main() {
 	numberOfJobsFound = findNumJobs();
 
 	Jobs *jobsArry = new Jobs[numberOfJobsFound];
-	Jobs *jobsArrySTCF = new Jobs[numberOfJobsFound];
+	
 	for(int i = 0; i < numberOfJobsFound; i++)
 	{
 		in_stream >> jobsArry[i];
-		jobsArrySTCF = jobsArry[i];
+		
 	}
 	cout << "FIFO: ";
 	FIFO(jobsArry, numberOfJobsFound);
@@ -43,7 +43,7 @@ int main() {
 	BJF(jobsArry, numberOfJobsFound);
 	cout << endl;
 	cout << "STCF: ";
-   	STCF(jobsArrySTCF, numberOfJobsFound);
+   	STCF(jobsArry, numberOfJobsFound);
     	cout << endl;
 	cout << "RR: ";
 	RR(jobsArry, numberOfJobsFound);
