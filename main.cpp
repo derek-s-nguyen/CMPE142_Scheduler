@@ -230,7 +230,12 @@ void STCF(Jobs *jobsArry, int numberOfJobs){
                 if ((jobsArry[j].getArrival() <= timer) && (jobsArry[j].getRemainingTime() < shortestJobTimeRemaining) && (jobsArry[j].getRemainingTime() > 0)) {
                     shortestJobTimeRemaining = jobsArry[j].getRemainingTime();
                     shortestJob = j;
-                    jobsArry[shortestJob].setStartTime(timer);
+			
+                     if(!jobsArry[shortestJob].getjobStarted()){
+			     
+                        jobsArry[shortestJob].setStartTime(timer);
+                        jobsArry[shortestJobFound].setjobStarted(true);
+                    }
                     shortestJobFound = true;
                 }
             }
