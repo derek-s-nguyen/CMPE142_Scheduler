@@ -206,9 +206,14 @@ void STCF(Jobs *jobsArry, int numberOfJobs){
        {
            min = a;
            for (b = a + 1; b < numberOfJobs; b++){
-               if (jobsArry[b].getArrival() < jobsArry[min].getArrival()){
-                   min = b;
-               }
+               	if(jobsArry[b].getArrival() < jobsArry[min].getArrival()){
+                   	min = b;
+               	}
+		if(jobsArry[b].getArrival() == jobsArry[min].getArrival()){
+                   	if(jobsArry[b].getDuration() < jobsArry[min].getDuration()){
+                       		min = b;
+                   	}
+               	}
            }
            temp = jobsArry[min];
            jobsArry[min] = jobsArry[a];
@@ -223,27 +228,27 @@ void STCF(Jobs *jobsArry, int numberOfJobs){
 	//look for shortest to completion job
         while(numberOfCompletedJobs != numberOfJobs)
         {
-            for(int j = 0; j < numberOfJobs; j++){
+      		for(int j = 0; j < numberOfJobs; j++){
 		    //1.If job is less than or equivalent to the current time the timer has passed
 		    //2.The remaining time of the job is less than the current job's remaining job time
 		    //3.The remaing time of the job is less than 0
-                if ((jobsArry[j].getArrival() <= timer) && (jobsArry[j].getRemainingTime() < shortestJobTimeRemaining) && (jobsArry[j].getRemainingTime() > 0)) {
-                    shortestJobTimeRemaining = jobsArry[j].getRemainingTime();
-                    shortestJob = j;
-		    shortestJobFound = true;
-			//if job has not started before and all jobs were checked in the jobsArry
-                     if(!jobsArry[shortestJob].getjobStarted()){
+                	if((jobsArry[j].getArrival() <= timer) && (jobsArry[j].getRemainingTime() < shortestJobTimeRemaining) && (jobsArry[j].getRemainingTime() > 0)) {
+                    		shortestJobTimeRemaining = jobsArry[j].getRemainingTime();
+                    		shortestJob = j;
+			
+                	}
+            	}
+		//if job has not started before and all jobs were checked in the jobsArry
+		if(!jobsArry[shortestJob].getjobStarted()){
 			     
                         jobsArry[shortestJob].setStartTime(timer);
                         jobsArry[shortestJob].setjobStarted(true);
-                    	}
 			
-          	     shortestJobFound = true;
-                    
                 }
-            }
-		//if shortest was not found keep timer going
-            if (shortestJobFound == false) {
+			
+         shortestJobFound = true;//if shortest was not found keep timer going
+		
+            if(shortestJobFound == false) {
                 timer++;
                 continue;
             }
