@@ -17,6 +17,13 @@ void Jobs::operator =(const Jobs &job)
 	ID = job.ID;
 	arrival = job.arrival;
 	duration = job.duration;
+	startTime = job.startTime;
+	finishTime = job.finishTime;
+	remainingTime = job.remainingTime;
+	responseTime = job.responseTime;
+	completion = job.completion;
+	totalTimeElapsed = job.totalTimeElapsed;
+	jobStarted = job.jobStarted;
 }
 istream &operator >>(istream &in_stream, Jobs &job){
 	in_stream >> job.ID;
