@@ -1,3 +1,4 @@
+#include <bits/stdc++.h>
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
@@ -27,11 +28,11 @@ int main() {
 	numberOfJobsFound = findNumJobs();
 
 	Jobs *jobsArry = new Jobs[numberOfJobsFound];
-	
+
 	for(int i = 0; i < numberOfJobsFound; i++)
 	{
 		in_stream >> jobsArry[i];
-		
+
 	}
 	cout << "FIFO: ";
 	FIFO(jobsArry, numberOfJobsFound);
@@ -197,7 +198,7 @@ void BJF(Jobs *jobsArry, int numberOfJobs){//no preemption
 }
 
 void STCF(Jobs *jobsArry, int numberOfJobs){
-	
+
 	int a, min, b;
        	Jobs temp;
 
@@ -212,7 +213,7 @@ void STCF(Jobs *jobsArry, int numberOfJobs){
                	if(jobsArry[b].getArrival() < jobsArry[min].getArrival()){
                    	min = b;
 		}
-		
+
            }
            temp = jobsArry[min];
            jobsArry[min] = jobsArry[a];
@@ -223,7 +224,7 @@ void STCF(Jobs *jobsArry, int numberOfJobs){
         int timer = 0, shortestJobTimeRemaining = INT_MAX;
         int shortestJob = 0;
         bool shortestJobFound = false;
-	
+
 	//look for shortest to completion job
         while(numberOfCompletedJobs != numberOfJobs)
         {
@@ -238,19 +239,19 @@ void STCF(Jobs *jobsArry, int numberOfJobs){
                 	}
             	}
 		//if job has not started before and all jobs were checked in the jobsArry
-	      
-			
-		
+
+
+
             if(shortestJobFound == false) {//if shortest was not found keep timer going
                 timer++;
                 continue;
             }
-		
+
 	    if(!jobsArry[shortestJob].getjobStarted()){
-			     
+
                 jobsArry[shortestJob].setStartTime(timer);
                 jobsArry[shortestJob].setjobStarted(true);
-			
+
             }
 
             // Reduce job's remaining time by one
@@ -258,7 +259,7 @@ void STCF(Jobs *jobsArry, int numberOfJobs){
 
             // Update shortestJobTimeRemaining
             shortestJobTimeRemaining = jobsArry[shortestJob].getRemainingTime();
-            
+
             // If a job is completed
             if(jobsArry[shortestJob].getRemainingTime() == 0) {
 
@@ -271,7 +272,7 @@ void STCF(Jobs *jobsArry, int numberOfJobs){
             }
 	    if(shortestJobTimeRemaining == 0) shortestJobTimeRemaining = INT_MAX;
 
-	
+
             // Increment timer
             timer++;
 	}
@@ -281,6 +282,9 @@ void STCF(Jobs *jobsArry, int numberOfJobs){
 }
 
 void RR(Jobs *jobsArry, int numberOfJobs){
+	for(int f = 0; f < numberOfJobs; f++){
+		jobsArry[f].setRemainingTime(jobsArry[f].getDuration());//resetting remaining times for all jobs
+	}
     int a, min, b, numberOfJobsDone = 0;
     Jobs temp;
 	int currentTimeStamp = 0;//time stamp starts at zero
@@ -406,4 +410,3 @@ int getMaxIndexOfCurrentAvailableJobs(Jobs *jobsArry, int currentTimeStamp, int 
 	return index;
 
 }
-
