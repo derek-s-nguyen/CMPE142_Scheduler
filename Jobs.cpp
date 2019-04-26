@@ -10,7 +10,7 @@ int Jobs::getID(){ return ID; }
 int Jobs::getDuration(){ return duration; }
 int Jobs::getRemainingTime(){ return remainingTime; }
 void Jobs::takeTimeSliceAway(int timeToTakeAway){
-	remainingTime = remainingTime - timeToTakeAway;//we chose 5 as the quanta of time that a job is alloted in the RR scheduler
+	remainingTime = remainingTime - timeToTakeAway;//we chose 1 as the quanta of time that a job is alloted in the RR scheduler
 }
 void Jobs::operator =(const Jobs &job)
 {
