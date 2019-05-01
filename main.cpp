@@ -207,7 +207,7 @@ void BJF(Jobs *jobsArry, int numberOfJobs){//no preemption
 void STCF(Jobs *jobsArry, int numberOfJobs){
 
     int a, min, b;
-        Jobs temp;
+        Jobs temp, temp2;
 
        //running selection sort (for simplicity--should be improved) just to sort the jobs by increasing order of arrival times
        for (a = 0; a < (numberOfJobs - 1); a++)
@@ -283,8 +283,21 @@ void STCF(Jobs *jobsArry, int numberOfJobs){
             // Increment timer
             timer++;
     }
-
-       outputJobs(jobsArry, numberOfJobs);
+    
+    for (int i = 0; i < (numberOfJobs - 1); i++)
+    {
+           int min2 = i;
+            for (int j = i + 1; j < numberOfJobs; j++){
+                if (jobsArry[j].getStartTime() < jobsArry[min2].getStartTime()){
+                    min2 = j;
+                }
+            }
+            temp2 = jobsArry[min2];
+            jobsArry[min2] = jobsArry[i];
+            jobsArry[i] = temp2;
+     }
+        
+     outputJobs(jobsArry, numberOfJobs);
 
 }
 
